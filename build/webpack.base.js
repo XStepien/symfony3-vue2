@@ -2,6 +2,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const config = require('./config')
+const StyleLintPlugin = require('stylelint-webpack-plugin')
 const ExtractCSSPlugin = require('./extractCSSPlugin')
 
 const postcss = {
@@ -93,6 +94,25 @@ let webpack_base = {
   performance: {
     hints: config.debug ? false : 'warning'
   }
+}
+
+if (config.stylelint) {
+  webpack_base.plugins.push(
+    new StyleLintPlugin({
+      files: config.stylelint
+    })
+  )
+}
+
+if (config.html) {
+  const HtmlWebpackPlugin = require('html-webpack-plugin')
+  webpack_base.plugins.push(
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: 'index.html',
+      inject: true
+    })
+  )
 }
 
 module.exports = webpack_base
